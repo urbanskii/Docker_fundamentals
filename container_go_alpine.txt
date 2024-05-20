@@ -1,0 +1,45 @@
+cd images
+ mkdir go
+ docker pull golang
+ docker pull alpine
+ docker images
+
+
+ nano app.go
+ 
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	fmt.Println("Qual é o seu nome?")
+	var name string
+	fmt.Scanln(&name)
+	fmt.Printf("Oi, %s! Eu sou a linguagem Go!\n", name)
+}
+
+
+ nano Dockerfile
+ FROM golang as exec
+
+ COPY app.go /go/src/app/
+
+ ENV GO111MODULE=auto
+
+ WORKDIR /go/src/app/
+
+ RUN go build -o app.go .
+
+ FROM alpine
+
+ WORKDIR /appexec
+
+ COPY --from=exec /go/src/app /appexec
+ RUN chmod -R 755 /appexec
+ ENTERPOINT ./app.go
+
+docker image build -t app-go:1.0 .
+
+docker run -ti --name meuappOK app-go:1.0
