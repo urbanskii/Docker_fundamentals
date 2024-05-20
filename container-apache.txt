@@ -1,0 +1,7 @@
+docker pull httpd
+
+mkdir /data/apache-A
+cd /data/apache-A/
+nano index.html
+
+docker run --name apache-A -d -p 80:80 --volume=/data/apache-A:/usr/local/apache2/htdocs httpd
