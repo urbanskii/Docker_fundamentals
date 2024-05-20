@@ -1,0 +1,9 @@
+container php:
+
+docker pull php:7.4-apache
+
+mkdir /data/php-A
+cd /data/php-A/
+nano index.html
+
+docker run --name php-A -d -p 8080:80 --volume=/data/php-A:/var/www/html php:7.4-apache
