@@ -1,0 +1,29 @@
+docker pull python
+
+
+
+cd images/
+mkdir python
+cd python/
+
+nano app.py
+nome = input ("Qual é o seu nome")
+
+print(nome)
+
+nano Dockerfile
+
+FROM python
+
+WORKDIR /usr/src/app
+
+COPY app.py /usr/src/app
+
+CMD ["python", "./app.py"]
+
+
+docker image build -t app-python:1.0 . 
+
+docker run -ti --name runapp1 app-python:1.0
+
+ 
