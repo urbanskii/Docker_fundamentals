@@ -1,0 +1,16 @@
+docker update php-A -m 128M --cpus 0.2
+
+
+docker run --name ubuntu-C -dti -m 128M --cpus 0.2 ubuntu
+
+docker exec -ti ubuntu-C bash
+apt update
+apt -y install stress
+
+stress --cpu 1 --vm-bytes 50m --vm 1 --vm-bytes 50m
+
+docker info
+
+docker logs container
+
+docker container top mysql-A

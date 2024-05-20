@@ -1,0 +1,34 @@
+docker run -dti --name ubuntu-python ubuntu
+
+docker exec -ti ubuntu-python bash
+
+apt update
+
+apt install -y python3 nano
+
+cd /opt
+
+nano app.py
+
+nome = input("Qual é o seu nome? ")
+print(nome)
+
+docker exec -ti ubuntu-python python3 /opt/app.py
+
+mkdir /images
+cd /images
+mkdir ubuntu-python
+cd ubuntu-python/
+nano app.py
+
+
+nano dockerfile
+
+FROM ubuntu
+RUN rm /var/lib/dpkg/lock-frontend && dpkg --configure -a && apt update && apt install -y python3 && apt nano && apt clean
+COPY app.py /opt/app.py
+CMD python3 /opt/app.py
+
+
+docker build . -t ubuntu-python
+docker run -ti --name meu-app ubuntu-python
