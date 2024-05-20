@@ -43,3 +43,9 @@ func main() {
 docker image build -t app-go:1.0 .
 
 docker run -ti --name meuappOK app-go:1.0
+
+
+para subir na nuvem docker hub:
+
+docker build . -t urbanskii/my-go-app:1.0
+docker push urbanskii/my-go-app:1.0
