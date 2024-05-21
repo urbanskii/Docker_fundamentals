@@ -1,0 +1,128 @@
+Docker compose with 3 containers PHP, APACHE, MYSQL
+
+cd /data/
+mkdir php
+cd php
+nano index.php
+mkdir admin
+cd admin
+nano uploads.ini
+
+cd /compose
+mkdir php-mysql
+cd php-mysql
+nano docker-compose.yml
+
+
+====================
+DOCKER COMPOSE FILE
+====================
+
+version: "3.7"
+
+services:
+  web:
+    image: webdevops/php-apache:alpine-php7
+    ports:
+      - "4500:80"
+    volumes:
+      - /data/php/:/app
+
+    networks:
+      - minha-rede
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: "Senha123"
+      MYSQL_DATABASE: "testedb"
+    ports:
+      - "3306:3306"
+    volumes:
+      - /data/mysql-C:/var/lib/mysql
+    networks:
+      - minha-rede
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      MYSQL_ROOT_PASSWORD: "Senha123"
+    ports:
+      - "8000:80"
+    volumes:
+      - /data/php/admin/uploads.ini:/usr/local/etc/php/conf.d/php-phpmyadmin.ini
+
+    networks:
+      minha-rede
+networks:
+  minha-rede:
+    driver: bridge
+
+====================
+UPLOADS.ini file
+====================
+
+file_uploads = On
+memory_limit = 500M
+upload_max_filesize = 500M
+post_max_size = 500M
+max_execution_time = 600
+max_file_uploads = 50000
+max_execution_time = 5000
+max_input_time = 5000
+
+
+====================
+INDEX.PHP file
+====================
+
+	<html>
+
+	<head>
+	<title>Exemplo PHP</title>
+	</head>
+
+	<?php
+	ini_set("display_errors", 1);
+	header('Content-Type: text/html; charset=iso-8859-1');
+
+	echo 'Versao Atual do PHP: ' . phpversion() . '<br>';
+
+	$servername = "db";
+	$username = "root";
+	$password = 'Senha123';
+	$database = "testedb";
+
+
+	// Criar conexão
+
+
+	$link = new mysqli($servername, $password, $username, $password, $database);
+
+	/* check connection */
+
+	if (mysqli_connect_errno()){
+		printf("Connect failed: %s\n", mysqli_connect_error());
+		exit();
+	}
+
+	$query = "SELECT * FROM  tabela_exemplo";
+
+	if ($result = mysqli_query($link, $query)){
+		
+		while ($row = mysqli_fetch_assoc($result)){
+			printf("%s %s %s <br>", $row["nome"], $row["cidade"], $row["salario"]);
+		}
+
+		mysqli_free_results($result);
+	}
+	mysqli_close($link);
+
+	?>
+
+	</html>
+
+
+
+
+
